@@ -1,4 +1,5 @@
 {
+<<<<<<< HEAD
   "name": "empty-project",
   "version": "0.1.0",
   "private": true,
@@ -15,6 +16,16 @@
     "react-scripts": "4.0.3",
     "typescript": "^4.1.2",
     "web-vitals": "^1.0.1"
+=======
+  "name": "react-jira",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "cra-template-typescript": "1.1.2",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
+    "react-scripts": "4.0.3"
+>>>>>>> caf4c3e9ff060d45595e6acc57b41b9e4d7676d4
   },
   "scripts": {
     "start": "react-scripts start",

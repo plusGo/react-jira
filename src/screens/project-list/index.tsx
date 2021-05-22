@@ -1,8 +1,8 @@
 import React, {useEffect, useState} from 'react';
+import * as qs from 'qs';
+import {cleanObject, useDebounce, useMount} from '../../utils';
 import {SearchPanel} from './search-panel';
 import {List} from './list';
-import * as qs from 'qs';
-import {cleanObject} from '../../utils';
 
 const apiUrl = process.env.REACT_APP_API_URL;
 export const ProjectListScreen = () => {
@@ -37,22 +37,3 @@ export const ProjectListScreen = () => {
         <List list={list} users={users}/>
     </div>
 };
-
-export const useMount = (callback) => {
-    useEffect(() => {
-        callback();
-    }, []);
-};
-
-export const useDebounce = (value, delay) => {
-    const [debounceValue, setDebounceValue] = useState(value);
-    useEffect(() => {
-        const timer = setTimeout(() => {
-            setDebounceValue(value);
-        }, delay);
-        return () => clearTimeout(timer);
-    }, [value, delay]);
-
-    return debounceValue;
-};
-

@@ -12,26 +12,47 @@ export const ProjectListScreen = () => {
         name: '',
         personId: ''
     });
+
+    const debounceParam = useDebounce(param, 2000);
     const [list, setList] = useState([]);
 
     useEffect(() => {
-        fetch(`${apiUrl}/projects?${qs.stringify(cleanObject(param))}`).then(async response => {
+        fetch(`${apiUrl}/projects?${qs.stringify(cleanObject(debounceParam))}`).then(async response => {
             if (response.ok) {
                 setList(await response.json());
             }
         })
-    }, [param]);
+    }, [debounceParam]);
 
-    useEffect(() => {
+    useMount(() => {
         fetch(`${apiUrl}/users`).then(async response => {
             if (response.ok) {
                 setUsers(await response.json());
             }
         })
-    }, []);
+    });
 
     return <div>
         <SearchPanel users={users} param={param} setParam={setParam}/>
         <List list={list} users={users}/>
     </div>
 };
+
+export const useMount = (callback) => {
+    useEffect(() => {
+        callback();
+    }, []);
+};
+
+export const useDebounce = (value, delay) => {
+    const [debounceValue, setDebounceValue] = useState(value);
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            setDebounceValue(value);
+        }, delay);
+        return () => clearTimeout(timer);
+    }, [value, delay]);
+
+    return debounceValue;
+};
+

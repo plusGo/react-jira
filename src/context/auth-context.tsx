@@ -1,9 +1,10 @@
-import React, {ReactNode, useState} from 'react';
+import React, {ReactNode} from 'react';
 import * as auth from 'auth-provider';
 import {User} from '../screens/project-list/search-panel';
 import {http} from '../utils/http';
 import {useMount} from '../utils';
 import {useAsync} from '../utils/use-async';
+import {FullPageErrorCallBack, FullPageLoading} from '../components/lib';
 
 interface AuthForm {
     username: string;
@@ -38,8 +39,12 @@ export const AuthProvider = ({children}: { children: ReactNode }) => {
     useMount(() => {
         run(bootstrapUser());
     });
-    if(isIdle||isLoading){
-        return <p>loading...</p>
+    if (isIdle || isLoading) {
+        return <FullPageLoading/>
+    }
+
+    if(isError){
+        return <FullPageErrorCallBack error={error}/>
     }
 
     return <AuthContext.Provider children={children} value={{user, login, register, logout}}/>

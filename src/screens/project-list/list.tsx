@@ -2,6 +2,7 @@ import React from 'react';
 import {User} from './search-panel';
 import {Table, TableProps} from 'antd';
 import dayjs from 'dayjs';
+import {useDocumentTitle} from '../../utils';
 
 export interface Project {
     id?: string;
@@ -17,6 +18,7 @@ interface ListProps extends TableProps<Project> {
 }
 
 export const List = ({users, ...props}: ListProps) => {
+    useDocumentTitle('项目列表', false);
     return (
         <Table rowKey={"id"} pagination={false} columns={[
             {

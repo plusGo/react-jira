@@ -1,4 +1,4 @@
-import {useEffect, useState} from 'react';
+import {useEffect, useRef, useState} from 'react';
 
 export const isFalsy = (value: unknown) => value === 0 ? false : !value;
 
@@ -44,4 +44,20 @@ export const useArray = <T>(values: T[]) => {
         (index: number) => setData(data.filter(($obj, $index) => index !== $index)),
 
     ];
+};
+
+export const useDocumentTitle = (title?: string, keepOnUnmount = true) => {
+    const oldTitle = useRef(document.title).current;
+
+    useEffect(() => {
+        document.title = title || '';
+    }, [title]);
+
+    useEffect(() => {
+        return () => {
+            if (!keepOnUnmount) {
+                document.title = oldTitle;
+            }
+        }
+    }, [keepOnUnmount, oldTitle])
 };

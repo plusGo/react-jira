@@ -3,9 +3,11 @@ import {User} from './search-panel';
 import {Table, TableProps} from 'antd';
 import dayjs from 'dayjs';
 import {useDocumentTitle} from '../../utils';
+// react-router 和 react-router-dom的关系，类似于 react 和 react-dom/react-native的关系
+import {Link} from 'react-router-dom';
 
 export interface Project {
-    id?: string;
+    id?: number;
     name?: string;
     personId?: string;
     pin: boolean;
@@ -23,8 +25,10 @@ export const List = ({users, ...props}: ListProps) => {
         <Table rowKey={"id"} pagination={false} columns={[
             {
                 title: '名称',
-                dataIndex: 'name',
-                sorter: (a, b) => (a.name?.localeCompare(b?.name || '')) as any
+                sorter: (a, b) => (a.name?.localeCompare(b?.name || '')) as any,
+                render(value, project) {
+                    return <Link to={String(project.id)}>{project.name}</Link>
+                }
             }, {
                 title: '部门',
                 dataIndex: 'organization'

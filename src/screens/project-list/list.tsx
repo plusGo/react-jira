@@ -5,9 +5,11 @@ import dayjs from 'dayjs';
 import {useDocumentTitle} from '../../utils';
 // react-router 和 react-router-dom的关系，类似于 react 和 react-dom/react-native的关系
 import {Link} from 'react-router-dom';
+import {Pin} from '../../components/pin';
+import {useEditProject} from './util';
 
 export interface Project {
-    id?: number;
+    id: number;
     name?: string;
     personId?: number;
     pin: boolean;
@@ -21,8 +23,16 @@ interface ListProps extends TableProps<Project> {
 
 export const List = ({users, ...props}: ListProps) => {
     useDocumentTitle('项目列表', false);
+    const {mutate} = useEditProject();
+    const pinProject = (id: number) => (pin: boolean) => mutate({id, pin});
     return (
         <Table rowKey={"id"} pagination={false} columns={[
+            {
+                title: <Pin checked={true} disabled={true}/>,
+                render(value, project) {
+                    return <Pin checked={project.pin} onCheckedChange={pinProject(project.id)}/>
+                }
+            },
             {
                 title: '名称',
                 sorter: (a, b) => (a.name?.localeCompare(b?.name || '')) as any,

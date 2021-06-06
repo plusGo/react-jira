@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React from 'react';
 import {useDebounce} from '../../utils';
 import {SearchPanel} from './search-panel';
 import {List} from './list';
@@ -10,11 +10,7 @@ import {useUrlQueryParam} from '../../utils/url';
 
 export const ProjectListScreen = () => {
 
-    const [, setParam] = useState({
-        name: '',
-        personId: ''
-    });
-    const [param] = useUrlQueryParam(['name', 'personId']);
+    const [param, setParam] = useUrlQueryParam(['name', 'personId']);
 
     const debounceParam = useDebounce(param, 1000);
 
@@ -31,7 +27,7 @@ export const ProjectListScreen = () => {
     )
 };
 
-// ProjectListScreen.whyDidYouRender = true;
+ProjectListScreen.whyDidYouRender = false;
 
 const Container = styled.div`
 padding: 3.2rem;

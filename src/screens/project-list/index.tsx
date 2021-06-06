@@ -1,20 +1,18 @@
 import React from 'react';
-import {useDebounce} from '../../utils';
+import {useDebounce, useDocumentTitle} from '../../utils';
 import {SearchPanel} from './search-panel';
 import {List} from './list';
 import styled from '@emotion/styled';
 import {Typography} from 'antd';
 import {useProjects} from '../../utils/project';
 import {useUsers} from '../../utils/user';
-import {useUrlQueryParam} from '../../utils/url';
+import {useProjectSearchParams} from './util';
 
 export const ProjectListScreen = () => {
+    useDocumentTitle('项目列表', false);
 
-    const [param, setParam] = useUrlQueryParam(['name', 'personId']);
-
-    const debounceParam = useDebounce(param, 1000);
-
-    const {isLoading, error, data: list} = useProjects(debounceParam);
+    const [param, setParam] = useProjectSearchParams();
+    const {isLoading, error, data: list} = useProjects(useDebounce(param, 200));
     const {data: users} = useUsers();
 
     return (

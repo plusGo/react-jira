@@ -6,7 +6,7 @@ import {useDocumentTitle} from '../../utils';
 // react-router 和 react-router-dom的关系，类似于 react 和 react-dom/react-native的关系
 import {Link} from 'react-router-dom';
 import {Pin} from '../../components/pin';
-import {useEditProject} from './util';
+import {useEditProject} from '../../utils/project';
 
 export interface Project {
     id: number;
@@ -19,12 +19,16 @@ export interface Project {
 
 interface ListProps extends TableProps<Project> {
     users: User[];
+    refresh: () => void;
 }
 
 export const List = ({users, ...props}: ListProps) => {
     useDocumentTitle('项目列表', false);
     const {mutate} = useEditProject();
-    const pinProject = (id: number) => (pin: boolean) => mutate({id, pin});
+    const pinProject = (id: number) => (pin: boolean) => {
+        mutate({id, pin}).then(() => props?.refresh());
+    };
+
     return (
         <Table rowKey={"id"} pagination={false} columns={[
             {

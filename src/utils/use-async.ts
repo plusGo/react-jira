@@ -16,11 +16,16 @@ const defaultConfig = {
     throwOnError: false
 };
 
-export const useAsync = <D>(initialState?: State<D>, initialConfig?: typeof defaultConfig) => {
+export const useAsync = <D>(
+    initialState?: State<D>,
+    initialConfig?: typeof defaultConfig) => {
     const config = {...defaultConfig, ...initialConfig};
     const [state, setState] = useState<State<D>>({
         ...defaultInitialState,
         ...initialState
+    });
+
+    const [retry, setRetry] = useState(() => () => {
     });
 
     const setData = (data: D) => setState({
@@ -35,10 +40,16 @@ export const useAsync = <D>(initialState?: State<D>, initialConfig?: typeof defa
         data: null
     });
 
-    const run = (promise: Promise<D>) => {
+    const run = (promise: Promise<D>, runConfig?: { retry: () => Promise<D> }) => {
         if (!promise || !promise.then) {
             throw new Error('请传入 Promise 类型数据')
         }
+        setRetry(() => () => {
+            if (runConfig?.retry()) {
+                run(runConfig.retry(), runConfig);
+            }
+        });
+
         setState({...state, stat: 'loading'});
         return promise.then(data => {
             setData(data);
@@ -46,17 +57,19 @@ export const useAsync = <D>(initialState?: State<D>, initialConfig?: typeof defa
         }).catch(error => {
             setError(error);
             if (config.throwOnError) {
-               return  Promise.reject(error);
+                return Promise.reject(error);
             }
             return error;
         })
     };
+
     return {
         isIdle: state.stat === 'idle',
         isLoading: state.stat === 'loading',
         isError: state.stat === 'error',
         isSuccess: state.stat === 'success',
         run,
+        retry,
         setData,
         setError,
         ...state
